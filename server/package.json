@@ -1,0 +1,36 @@
+{
+  "name": "@thinkingidentities/hippocamp-server",
+  "version": "0.1.0",
+  "description": "Hippocamp MCP Server - The hippocampus for AI agents",
+  "main": "build/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "start": "node build/index.js",
+    "dev": "tsc --watch & node --watch build/index.js",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "memory",
+    "ai",
+    "knowledge-graph",
+    "neo4j",
+    "claude"
+  ],
+  "author": "ThinkingIdentities",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.5.0",
+    "neo4j-driver": "^5.23.0",
+    "redis": "^4.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
