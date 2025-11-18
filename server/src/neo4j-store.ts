@@ -49,7 +49,7 @@ export class Neo4jMemoryStore {
   /**
    * Search memories using full-text search
    */
-  async searchMemory(query: string, limit: number = 10): Promise<any[]> {
+  async searchMemory(query: string, limit: number = 100): Promise<any[]> {
     const session = this.getSession();
 
     try {
@@ -68,7 +68,7 @@ export class Neo4jMemoryStore {
         ORDER BY score DESC
         LIMIT $limit
         `,
-        { query, limit }
+        { query, limit: neo4j.int(limit) }
       );
 
       return result.records.map((record) => ({
@@ -113,7 +113,7 @@ export class Neo4jMemoryStore {
   /**
    * Get all memories in a specific category
    */
-  async getByCategory(categoryName: string, limit: number = 20): Promise<any[]> {
+  async getByCategory(categoryName: string, limit: number = 100): Promise<any[]> {
     const session = this.getSession();
 
     try {
@@ -128,7 +128,7 @@ export class Neo4jMemoryStore {
         ORDER BY c.timestamp DESC
         LIMIT $limit
         `,
-        { categoryName, limit }
+        { categoryName, limit: neo4j.int(limit) }
       );
 
       return result.records.map((record) => ({

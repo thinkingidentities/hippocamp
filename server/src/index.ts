@@ -25,13 +25,17 @@ const NEO4J_USER = process.env.NEO4J_USER || 'neo4j';
 const NEO4J_PASSWORD = process.env.NEO4J_PASSWORD || 'MPohzsk$oVguC@HG0I#vONGH%Rih%tC^';
 const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
 const REDIS_PORT = parseInt(process.env.REDIS_PORT || '6379');
+const HIPPOCAMP_OWNER = process.env.HIPPOCAMP_OWNER || 'shared';
 
 class HippocampServer {
   private server: Server;
   private neo4jStore: Neo4jMemoryStore;
   private redisCache: RedisCache;
+  private owner: string;
 
   constructor() {
+    this.owner = HIPPOCAMP_OWNER;
+
     this.server = new Server(
       {
         name: 'hippocamp',
@@ -67,8 +71,8 @@ class HippocampServer {
               },
               limit: {
                 type: 'number',
-                description: 'Maximum number of results to return (default: 10)',
-                default: 10,
+                description: 'Maximum number of results to return (default: 100)',
+                default: 100,
               },
             },
             required: ['query'],
@@ -86,8 +90,8 @@ class HippocampServer {
               },
               limit: {
                 type: 'number',
-                description: 'Maximum number of results to return (default: 20)',
-                default: 20,
+                description: 'Maximum number of results to return (default: 100)',
+                default: 100,
               },
             },
             required: ['category'],
@@ -127,13 +131,13 @@ class HippocampServer {
           case 'search_memory':
             return await this.searchMemory(
               (args?.query as string) || '',
-              Math.floor((args?.limit as number) || 10)
+              Math.floor((args?.limit as number) || 100)
             );
 
           case 'get_by_category':
             return await this.getByCategory(
               (args?.category as string) || '',
-              Math.floor((args?.limit as number) || 20)
+              Math.floor((args?.limit as number) || 100)
             );
 
           case 'get_conversation':
@@ -350,6 +354,7 @@ class HippocampServer {
       console.error('='.repeat(80));
       console.error('Hippocamp MCP Server starting...');
       console.error(`Version: ${VERSION} (Build: ${BUILD_DATE})`);
+      console.error(`Owner: ${this.owner} (WRITE operations scoped to this cognate)`);
       console.error(`Neo4j: ${NEO4J_URI}`);
       console.error(`Redis: ${REDIS_HOST}:${REDIS_PORT}`);
       console.error(`Process: PID ${process.pid} | Started: ${new Date().toISOString()}`);
